@@ -1,0 +1,26 @@
+{
+  "name": "@sphinx-software/disk",
+  "version": "0.0.1",
+  "description": "FileStorage for Sphinx-software Fusion",
+  "main": "fusion-disk.provider.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sphinx-software/fusion-disk.git"
+  },
+  "keywords": [
+    "s3",
+    "googleCloud"
+  ],
+  "author": "Duong van Ha <friendd1996@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sphinx-software/fusion-disk/issues"
+  },
+  "homepage": "https://github.com/sphinx-software/fusion-disk#readme",
+  "dependencies": {
+    "@google-cloud/storage": "^1.5.2"
+  }
+}
