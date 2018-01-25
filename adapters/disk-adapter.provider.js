@@ -1,5 +1,6 @@
 const S3Storage          = require('./s3/S3Storage');
 const GoogleCloudStorage = require('./googleCloud/GoogleCloudStorage');
+const LocalStorage       = require('./local/LocalStorage');
 
 class DiskAdapterProvider {
 
@@ -23,7 +24,7 @@ class DiskAdapterProvider {
     }
 
     makeLocalAdapter(config) {
-
+        return new LocalStorage();
     }
 }
 
