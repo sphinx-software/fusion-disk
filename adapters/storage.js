@@ -89,6 +89,10 @@ class Storage {
     url(name) {
         throw new Error('not implemented');
     }
+
+    async _handleFile(req, file, cb) {
+        await this.put(this.getFileName(file), file.stream);
+    }
 }
 
 module.exports = Storage;
