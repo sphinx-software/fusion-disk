@@ -1,6 +1,6 @@
-const Storage = require('../storage');
+import Storage from '../storage';
 
-class GoogleCloudStorage extends Storage {
+export default class GoogleCloudStorage extends Storage {
 
     constructor(storage) {
         super();
@@ -13,57 +13,86 @@ class GoogleCloudStorage extends Storage {
      * @return {GoogleCloudStorage}
      */
     setBucket(bucketName) {
-        if (!bucketName) throw new Error('NameBucket not null');
-        this.bucket = this.storage.bucket(bucketName);
+        if (!bucketName) throw new Error('BucketName not null');
+        this.bucketName = bucketName;
+        this.bucket     = this.storage.bucket(bucketName);
         return this;
     }
 
     /**
      *
-     * @param {ReadStream | String} data
      * @param {String} fileName
+     * @param {String | buffer} stringData
+     * @param {'public'| 'private'} permission
      * @return {Promise<*>}
      */
-    put(data, fileName) {
-        if (typeof data === 'string') return this.putAsString(data, fileName);
-        return this.putAsStream(data, fileName);
-    }
-
-    /**
-     *
-     * @param {ReadStream} steam
-     * @param {String} fileName
-     * @return {Promise<*>}
-     */
-    putAsStream(steam, fileName) {
-        let file = this.bucket.file(fileName);
+    put(fileName, stringData, permission) {
         return new Promise((resolve, reject) => {
-            steam.pipe(file.createWriteStream()).on(reject).on(resolve);
+            this.createWriteStream(fileName, permission).
+                on('error', () => reject()).
+                on('finish', () => resolve()).
+                end(stringData);
         });
-
     }
 
     /**
      *
-     * @param {String} stringData
-     * @param {String} fileName
-     * @return {Promise}
+     * @param fileName
+     * @param {'public'| 'private'} permission
+     * @return {WritableStream}
      */
-    putAsString(stringData, fileName) {
-        return this.bucket.file(fileName).save(stringData);
+    createWriteStream(fileName, permission) {
+        let file  = this.bucket.file(fileName);
+        let steam = file.createWriteStream();
+        steam.on('finish', () => this.setPermission(file, permission));
+        return steam;
     }
 
-    get() {
-
+    public(fileName) {
+        return this.bucket.file(fileName).makePublic();
     }
 
-    exists() {
-
+    /**
+     *
+     * @param {String} fileName
+     * @return {ReadableStream}
+     */
+    get(fileName) {
+        return this.bucket.file(fileName).createReadStream();
     }
 
-    url() {
-
+    /**
+     *
+     * @param {String} fileName
+     * @return {Promise<boolean>}
+     */
+    async exists(fileName) {
+        let [response] = await this.bucket.file(fileName).exists();
+        return response;
     }
+
+    /**
+     *
+     * @param {String} fileName
+     * @return {string} url
+     */
+    url(fileName) {
+        return `https://storage.googleapis.com/${this.bucketName}/${filename}`;
+    }
+
+    /**
+     *
+     * @param file
+     * @param {'public'| 'private'} permission
+     * @return {*}
+     */
+    setPermission(file, permission) {
+        switch (permission) {
+            case 'public':
+                return file.makePublic();
+            case 'private' :
+                return file.makePrivate();
+        }
+    }
+
 }
-
-module.exports = GoogleCloudStorage;

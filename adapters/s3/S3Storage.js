@@ -15,5 +15,6 @@ class S3Storage {
 
     }
 }
++
 
 module.exports = S3Storage;
