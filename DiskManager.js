@@ -1,7 +1,12 @@
-class DiskManager {
+export default class DiskManager {
 
     constructor() {
         this.storages = {};
+    }
+
+    setDefault(nameDisk) {
+        this.defaultDisk = nameDisk;
+        return this;
     }
 
     /**
@@ -11,7 +16,7 @@ class DiskManager {
      * @return {DiskManager}
      */
     register(diskName, Storage) {
-        this.storages[name] = Storage;
+        this.storages[diskName] = Storage;
         return this;
     }
 
@@ -25,5 +30,3 @@ class DiskManager {
     }
 
 }
-
-module.exports = DiskManager;

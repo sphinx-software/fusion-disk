@@ -1,4 +1,4 @@
-import Storage from '../storage';
+import Storage from '../Storage';
 
 export default class GoogleCloudStorage extends Storage {
 
@@ -9,30 +9,14 @@ export default class GoogleCloudStorage extends Storage {
 
     /**
      *
-     * @param {String} bucketName
+     * @param {string} bucketName
      * @return {GoogleCloudStorage}
      */
     setBucket(bucketName) {
-        if (!bucketName) throw new Error('BucketName not null');
+        if (!bucketName) throw new Error('E_DISK_GOOGLE_CLOUD: BucketName not null');
         this.bucketName = bucketName;
         this.bucket     = this.storage.bucket(bucketName);
         return this;
-    }
-
-    /**
-     *
-     * @param {String} fileName
-     * @param {String | buffer} stringData
-     * @param {'public'| 'private'} permission
-     * @return {Promise<*>}
-     */
-    put(fileName, stringData, permission) {
-        return new Promise((resolve, reject) => {
-            this.createWriteStream(fileName, permission).
-                on('error', () => reject()).
-                on('finish', () => resolve()).
-                end(stringData);
-        });
     }
 
     /**
@@ -41,7 +25,7 @@ export default class GoogleCloudStorage extends Storage {
      * @param {'public'| 'private'} permission
      * @return {WritableStream}
      */
-    createWriteStream(fileName, permission) {
+    createWriteStream(fileName, permission = 'private') {
         let file  = this.bucket.file(fileName);
         let steam = file.createWriteStream();
         steam.on('finish', () => this.setPermission(file, permission));
@@ -54,7 +38,7 @@ export default class GoogleCloudStorage extends Storage {
 
     /**
      *
-     * @param {String} fileName
+     * @param {string} fileName
      * @return {ReadableStream}
      */
     get(fileName) {
@@ -63,7 +47,7 @@ export default class GoogleCloudStorage extends Storage {
 
     /**
      *
-     * @param {String} fileName
+     * @param {string} fileName
      * @return {Promise<boolean>}
      */
     async exists(fileName) {
@@ -73,7 +57,7 @@ export default class GoogleCloudStorage extends Storage {
 
     /**
      *
-     * @param {String} fileName
+     * @param {string} fileName
      * @return {string} url
      */
     url(fileName) {
