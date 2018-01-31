@@ -18,9 +18,7 @@ export default class LocalStorage extends Storage {
      */
     setDirectory(directory) {
         if (!directory) throw new Error('E_DIRK_LOCAL: config dir is not null');
-        if (!fs.existsSync(directory)) {
-            fs.mkdirSync(directory);
-        }
+        this.mkdir(directory);
         this.directory = directory;
         return this;
     }
@@ -31,7 +29,15 @@ export default class LocalStorage extends Storage {
      * @return {WriteStream}
      */
     createWriteStream(fileName) {
-        return fs.createWriteStream(path.join(this.directory, fileName));
+        let dir = path.join(path.dirname(fileName), this.directory);
+        this.mkdir(dir);
+        return fs.createWriteStream(path.join(dir, fileName));
+    }
+
+    mkdir(directory) {
+        if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory);
+        }
     }
 
     /**
