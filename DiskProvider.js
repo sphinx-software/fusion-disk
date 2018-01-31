@@ -22,7 +22,7 @@ export default class DiskProvider {
         const config       = await this.container.make(Config);
         const diskManager  = await this.container.make(DiskManager);
         const disksFactory = await this.container.make(DiskAdapterFactory);
-        diskManager.setDefault(config.default);
+        diskManager.setDefault(config.disk.default);
 
         const diskAdapters = await disksFactory.makeFromConfig(config.disk);
 
