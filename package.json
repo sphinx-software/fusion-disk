@@ -1,6 +1,6 @@
 {
   "name": "@sphinx-software/disk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "FileStorage for Sphinx-software Fusion",
   "main": "index.js",
   "scripts": {

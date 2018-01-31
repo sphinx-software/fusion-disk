@@ -30,7 +30,9 @@ export default class LocalStorage extends Storage {
      */
     createWriteStream(fileName) {
         let dir = path.join(path.dirname(fileName), this.directory);
-        this.mkdir(dir);
+        if (!dir === this.directory) {
+            this.mkdir(dir);
+        }
         return fs.createWriteStream(path.join(dir, fileName));
     }
 
