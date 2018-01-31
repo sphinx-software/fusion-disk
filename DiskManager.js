@@ -25,7 +25,7 @@ export default class DiskManager {
      * @param {String} diskName
      * @return {Storage}
      */
-    disk(diskName) {
+    disk(diskName = this.defaultDisk) {
         return this.storages[diskName];
     }
 
@@ -37,7 +37,7 @@ export default class DiskManager {
      * @return {Promise<*>}
      */
     put(fileName, stringData, permission) {
-        return this.disk(this.defaultDisk).put(fileName, stringData, permission);
+        return this.disk().put(fileName, stringData, permission);
     }
 
     /**
@@ -47,7 +47,7 @@ export default class DiskManager {
      * @return {WriteStream}
      */
     createWriteStream(fileName, permission) {
-        return this.disk(this.defaultDisk).createWriteStream(fileName, permission);
+        return this.disk().createWriteStream(fileName, permission);
     }
 
     /**
@@ -56,7 +56,7 @@ export default class DiskManager {
      * @return {ReadableStream}
      */
     get(fileName) {
-        return this.disk(this.defaultDisk).get(fileName);
+        return this.disk().get(fileName);
     }
 
     /**
@@ -65,7 +65,7 @@ export default class DiskManager {
      * @return {Promise<boolean>}
      */
     exists(fileName) {
-        return this.disk(this.defaultDisk).exists(fileName);
+        return this.disk().exists(fileName);
     }
 
     /**
@@ -74,7 +74,7 @@ export default class DiskManager {
      * @return {Promise<boolean>}
      */
     delete(fileName) {
-        return this.disk(this.defaultDisk).delete(fileName);
+        return this.disk().delete(fileName);
     }
 
 }
