@@ -23,6 +23,10 @@ export default class LocalStorage extends Storage {
         return this;
     }
 
+    setStaticUrl(url) {
+        this.staticUrl = url;
+    }
+
     /**
      *
      * @param {string} fileName
@@ -67,5 +71,14 @@ export default class LocalStorage extends Storage {
      */
     delete(fileName) {
         return this.fsDelete(path.join(this.directory, fileName));
+    }
+
+    /**
+     *
+     * @param {string} fileName
+     * @return {Promise<void>}
+     */
+    url(fileName) {
+        return `${this.staticUrl}/${fileName}`;
     }
 }

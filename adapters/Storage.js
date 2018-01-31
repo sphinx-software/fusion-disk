@@ -50,7 +50,16 @@ export default class Storage {
      * @return {Promise<boolean>}
      */
     delete(fileName) {
+        throw new Error('not implemented');
+    }
 
+    /**
+     *
+     * @param {String} fileName
+     * @return {Promise<boolean>}
+     */
+    url(fileName) {
+        throw new Error('not implemented');
     }
 
 }

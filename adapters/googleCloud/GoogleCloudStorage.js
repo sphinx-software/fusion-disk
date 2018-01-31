@@ -61,7 +61,7 @@ export default class GoogleCloudStorage extends Storage {
      * @return {string} url
      */
     url(fileName) {
-        return `https://storage.googleapis.com/${this.bucketName}/${filename}`;
+        return `https://storage.googleapis.com/${this.bucketName}/${fileName}`;
     }
 
     /**
