@@ -43,6 +43,11 @@ export default class DiskAdapterFactory {
         );
     }
 
+    /**
+     *
+     * @param config
+     * @return {S3Storage}
+     */
     makeS3Adapter(config) {
         if (!config.accessKeyId || !config.secretAccessKey) throw new Error(
             'E_DIRK_S3: config credential is not null credential require accessKeyId && secretAccessKey');
@@ -63,6 +68,11 @@ export default class DiskAdapterFactory {
         return new S3Storage(s3, s3Writersteam).setBucket(config.bucket);
     }
 
+    /**
+     *
+     * @param config
+     * @return {GoogleCloudStorage}
+     */
     makeGoogleCloudAdapter(config) {
         const googleCLoudSdk = config.keyFilename ? new GoogleCloudSDK({
             keyFilename: config.keyFilename
@@ -71,6 +81,11 @@ export default class DiskAdapterFactory {
         return new GoogleCloudStorage(googleCLoudSdk).setBucket(config.bucket);
     }
 
+    /**
+     *
+     * @param config
+     * @return {LocalStorage}
+     */
     makeLocalAdapter(config) {
         return new LocalStorage().setDirectory(config.dir);
     }

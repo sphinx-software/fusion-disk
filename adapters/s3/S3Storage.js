@@ -60,15 +60,6 @@ export default class S3Storage extends Storage {
     /**
      *
      * @param {string} fileName
-     * @return {string} url
-     */
-    url(fileName) {
-        return `https://s3.amazonaws.com/${this.bucketName}/${fileName}`;
-    }
-
-    /**
-     *
-     * @param {string} fileName
      * @return {Promise<boolean>}
      */
     delete(fileName) {

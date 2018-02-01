@@ -13,7 +13,8 @@ export default class GoogleCloudStorage extends Storage {
      * @return {GoogleCloudStorage}
      */
     setBucket(bucketName) {
-        if (!bucketName) throw new Error('E_DISK_GOOGLE_CLOUD: BucketName not null');
+        if (!bucketName) throw new Error(
+            'E_DISK_GOOGLE_CLOUD: BucketName not null');
         this.bucketName = bucketName;
         this.bucket     = this.storage.bucket(bucketName);
         return this;
@@ -30,10 +31,6 @@ export default class GoogleCloudStorage extends Storage {
         let steam = file.createWriteStream();
         steam.on('finish', () => this.setPermission(file, permission));
         return steam;
-    }
-
-    public(fileName) {
-        return this.bucket.file(fileName).makePublic();
     }
 
     /**
@@ -53,15 +50,6 @@ export default class GoogleCloudStorage extends Storage {
     async exists(fileName) {
         let [response] = await this.bucket.file(fileName).exists();
         return response;
-    }
-
-    /**
-     *
-     * @param {string} fileName
-     * @return {string} url
-     */
-    url(fileName) {
-        return `https://storage.googleapis.com/${this.bucketName}/${fileName}`;
     }
 
     /**
