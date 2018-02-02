@@ -39,7 +39,7 @@ export default class S3Storage extends Storage {
      * @param {string} fileName
      * @return {ReadableStream}
      */
-    get(fileName) {
+    createReadStream(fileName) {
         return this.s3.getObject({
             Bucket: this.bucketName, Key: fileName
         }).createReadStream();

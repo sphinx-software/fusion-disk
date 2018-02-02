@@ -13,8 +13,7 @@ export default class GoogleCloudStorage extends Storage {
      * @return {GoogleCloudStorage}
      */
     setBucket(bucketName) {
-        if (!bucketName) throw new Error(
-            'E_DISK_GOOGLE_CLOUD: BucketName not null');
+        if (!bucketName) throw new Error('E_DISK_GOOGLE_CLOUD: BucketName not null');
         this.bucketName = bucketName;
         this.bucket     = this.storage.bucket(bucketName);
         return this;
@@ -38,7 +37,7 @@ export default class GoogleCloudStorage extends Storage {
      * @param {string} fileName
      * @return {ReadableStream}
      */
-    get(fileName) {
+    createReadStream(fileName) {
         return this.bucket.file(fileName).createReadStream();
     }
 

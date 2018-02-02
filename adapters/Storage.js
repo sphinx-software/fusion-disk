@@ -10,7 +10,7 @@ export default class Storage {
     put(fileName, stringData, permission) {
         return new Promise((resolve, reject) => {
             this.createWriteStream(fileName, permission).
-                on('error', () => reject()).
+                on('error', (error) => reject(error)).
                 on('finish', () => resolve()).
                 end(stringData.toString());
         });
@@ -31,7 +31,7 @@ export default class Storage {
      * @param {String} fileName
      * @return {ReadableStream}
      */
-    get(fileName) {
+    createReadStream(fileName) {
         throw new Error('not implemented');
     }
 

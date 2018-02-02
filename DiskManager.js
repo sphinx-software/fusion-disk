@@ -1,3 +1,10 @@
+import S3Storage          from './adapters/s3/S3Storage';
+import S3WriteSteam       from 's3-write-stream';
+import GoogleCloudSDK     from '@google-cloud/storage/src/index';
+import LocalStorage       from './adapters/local/LocalStorage';
+import GoogleCloudStorage from './adapters/googleCloud/GoogleCloudStorage';
+import AWS                from 'aws-sdk/index';
+
 export default class DiskManager {
 
     constructor() {
@@ -31,50 +38,80 @@ export default class DiskManager {
 
     /**
      *
-     * @param {String} fileName
-     * @param {String | buffer} stringData
-     * @param {'public'| 'private'} permission
-     * @return {Promise<*>}
+     * @param name
+     * @param config
+     * @return {Storage}
      */
-    put(fileName, stringData, permission) {
-        return this.disk().put(fileName, stringData, permission);
+    make(name, config) {
+        switch (name) {
+            case 'local':
+                return this.makeLocalAdapter(config);
+            case 's3':
+                return this.makeS3Adapter(config);
+            case 'googleCloud':
+                return this.makeGoogleCloudAdapter(config);
+            default :
+                throw new Error(`E_DISK: adapter [${name}] is not supported`);
+        }
     }
 
     /**
      *
-     * @param {String} fileName
-     * @param {'public'|'private'} permission
-     * @return {WriteStream}
+     * @param configDisks
+     * @return {void}
      */
-    createWriteStream(fileName, permission) {
-        return this.disk().createWriteStream(fileName, permission);
+    makeFromConfig(configDisks) {
+        Object.keys(configDisks.disks).map(async currentValue => {
+            let config = configDisks.disks[currentValue];
+            this.register(currentValue, await this.make(config.adapter, config));
+        });
     }
 
     /**
      *
-     * @param {String} fileName
-     * @return {ReadableStream}
+     * @param config
+     * @return {S3Storage}
      */
-    get(fileName) {
-        return this.disk().get(fileName);
+    makeS3Adapter(config) {
+        if (!config.accessKeyId || !config.secretAccessKey) throw new Error(
+            'E_DIRK_S3: config credential is not null credential require accessKeyId && secretAccessKey');
+
+        let s3 = new AWS.S3({
+            apiVersion     : config.apiVersion,
+            accessKeyId    : config.accessKeyId,
+            secretAccessKey: config.secretAccessKey
+        });
+
+        let s3Writersteam = S3WriteSteam({
+            apiVersion     : config.apiVersion,
+            accessKeyId    : config.accessKeyId,
+            secretAccessKey: config.secretAccessKey,
+            Bucket         : config.bucket
+        });
+
+        return new S3Storage(s3, s3Writersteam).setBucket(config.bucket);
     }
 
     /**
      *
-     * @param {String} fileName
-     * @return {Promise<boolean>}
+     * @param config
+     * @return {GoogleCloudStorage}
      */
-    exists(fileName) {
-        return this.disk().exists(fileName);
+    makeGoogleCloudAdapter(config) {
+        const googleCLoudSdk = config.keyFilename ? new GoogleCloudSDK({
+            keyFilename: config.keyFilename
+        }) : new GoogleCloudSDK();
+
+        return new GoogleCloudStorage(googleCLoudSdk).setBucket(config.bucket);
     }
 
     /**
      *
-     * @param {String} fileName
-     * @return {Promise<boolean>}
+     * @param config
+     * @return {LocalStorage}
      */
-    delete(fileName) {
-        return this.disk().delete(fileName);
+    makeLocalAdapter(config) {
+        return new LocalStorage().setDirectory(config.dir);
     }
 
 }

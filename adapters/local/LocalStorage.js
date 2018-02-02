@@ -59,7 +59,7 @@ export default class LocalStorage extends Storage {
      * @param {string} fileName
      * @return {ReadableStream}
      */
-    get(fileName) {
+    createReadStream(fileName) {
         return fs.createReadStream(path.join(this.directory, fileName));
     }
 
